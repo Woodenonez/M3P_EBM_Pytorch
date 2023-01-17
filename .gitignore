@@ -18,3 +18,6 @@ draft.py
 
 # cluster related
 jobscript
+
+# editor related
+.vscode/

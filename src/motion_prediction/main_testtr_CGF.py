@@ -30,7 +30,7 @@ def back2energy(x):
 
 
 ### Config
-root_dir = pathlib.Path(__file__).resolve().parents[1]
+root_dir = pathlib.Path(__file__).resolve().parents[2]
 
 # config_file = 'sdd_1t12_train.yml'
 # ref_image_name = 'label.png'
