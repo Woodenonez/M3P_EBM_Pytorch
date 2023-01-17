@@ -67,7 +67,7 @@ def load_manager(param, Net:torch.nn.Module, loss:dict, encoder_channels=None, d
         net = Net(param['input_channel'], num_classes=param['pred_len'], ) # in, out channels
     myNet = NetworkManager(net, loss, training_parameter=param, device=param['device'], verbose=verbose)
     myNet.build_Network()
-    return myNet, net
+    return myNet
 
 def save_profile(manager:NetworkManager, save_path:str='./'): # NOTE optional
     dt = datetime.now().strftime("%d_%m_%Y__%H_%M_%S")
@@ -109,7 +109,7 @@ def main_test_pre(root_dir, config_file, transform, Net:torch.nn.Module, ref_ima
     paths = load_path(param, root_dir)
     myDS, myDH = load_data(param, paths, transform, ref_image_name=ref_image_name)
     if Net is not None:
-        myNet, net = load_manager(param, Net, {})
+        myNet = load_manager(param, Net, {})
         myNet.model.load_state_dict(torch.load(paths[0]))
         myNet.model.eval() # with BN layer, must run eval first
     else:

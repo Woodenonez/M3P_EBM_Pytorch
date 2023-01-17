@@ -5,7 +5,6 @@ import math
 import torch
 
 from util.datatype import *
-import matplotlib.pyplot as plt
 
 def get_weight(grid:torch.Tensor, coords:torch.Tensor, sigmas:Indexable, rho=0, normalized=True):
     '''
@@ -119,61 +118,3 @@ def loss_mae(data, labels): # for batch
     abs_sum  = torch.sum(abs_diff, dim=2) # BxM
     loss = abs_sum/data.shape[0] # BxM
     return loss
-
-if __name__ == '__main__': # old tests
-    import numpy as np
-    from pathlib import Path
-    from torchvision import transforms
-    sys.path.append(str(Path(__file__).resolve().parents[1]))
-    from data_handle.data_handler import ToTensor, Rescale
-    from data_handle.data_handler import ImageStackDataset, DataHandler
-
-    project_dir = Path(__file__).resolve().parents[2]
-    data_dir = os.path.join(project_dir, 'Data/MAD_1n1e')
-    csv_path = os.path.join(project_dir, 'Data/MAD_1n1e/all_data.csv')
-    composed = transforms.Compose([Rescale((200,200), tolabel=False), ToTensor()])
-    dataset = ImageStackDataset(csv_path=csv_path, root_dir=data_dir, channel_per_image=1, transform=composed, T_channel=False)
-    myDH = DataHandler(dataset, batch_size=2, shuffle=False, validation_prop=0.2, validation_cache=5)
-
-    img   = torch.cat((dataset[0]['image'].unsqueeze(0), dataset[1]['image'].unsqueeze(0)), dim=0) # BxCxHxW
-    label = torch.cat((dataset[0]['label'].unsqueeze(0), dataset[1]['label'].unsqueeze(0)), dim=0)
-    print(img.shape)
-    print(label)
-
-    x_grid = np.arange(0, 201, 8)
-    y_grid = np.arange(0, 201, 8)
-    
-    px_idx = convert_coords2px(label, 10, 10, img.shape[3], img.shape[2])
-    print('Pixel index:', px_idx)
-    cell_idx = convert_px2cell(px_idx, x_grid, y_grid) # (xmin ymin xmax ymax)
-    print('Cell index:', cell_idx)
-
-    ### Random grid
-    grid = torch.ones((2,1,25,25)) # BxCxHxW
-    grid[0,0,17,12] = 0
-    loss = loss_nll(data=grid, label=cell_idx)
-    print('Loss:', loss)
-
-    ### Visualization
-    fig, axes = plt.subplots(2,2)
-    (ax1,ax3,ax2,ax4) = (axes[0,0],axes[0,1],axes[1,0],axes[1,1])
-
-    ax1.imshow(img[0,0,:,:], cmap='gray')
-    ax1.plot(px_idx[0,0], px_idx[0,1], 'rx')
-    ax1.set_xticks(x_grid)
-    ax1.set_yticks(y_grid)
-    ax1.grid(linestyle=':')
-
-    ax2.imshow(grid[0,0,:,:], cmap='gray')
-    ax2.plot(cell_idx[0,0], cell_idx[0,1], 'rx')
-
-    ax3.imshow(img[1,0,:,:], cmap='gray')
-    ax3.plot(px_idx[1,0], px_idx[1,1], 'rx')
-    ax3.set_xticks(x_grid)
-    ax3.set_yticks(y_grid)
-    ax3.grid(linestyle=':')
-
-    ax4.imshow(grid[1,0,:,:], cmap='gray')
-    ax4.plot(cell_idx[1,0], cell_idx[1,1], 'rx')
-
-    plt.show()

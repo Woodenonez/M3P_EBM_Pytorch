@@ -6,7 +6,6 @@ import matplotlib.patches as patches
 def plot_on_ref(axes, ref, traj, label, e_grid, prob_map, samlpes):
     ax1, ax2, ax3 = axes
     ax1.imshow(ref, cmap='gray')
-    ax1.plot(traj[-1,0], traj[-1,1], 'mo', label='current')
     ax1.plot(traj[:-1,0], traj[:-1,1], 'm.') # past
     ax1.plot(label[:,0], label[:,1], 'ro', label="ground truth")
     ax1.legend()

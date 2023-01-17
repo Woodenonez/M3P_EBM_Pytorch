@@ -103,7 +103,7 @@ class NetworkManager:
             output = self.model(data.float().to(device))
         return output
 
-    def validate(self, data, labels, loss_function=None):
+    def validate(self, data, labels, loss_function=None) -> torch.Tensor:
         if loss_function is None:
             loss_function = self.loss_func
         outputs = self.model(data)
@@ -238,6 +238,16 @@ class NetworkManager:
                 this_error = np.min(np.sum((np.array(mu_list) - label[bh, ti].cpu().numpy())**2, axis=1)) # best prediction at this time step
                 traj_error.append(np.square(this_error))
         return np.mean(traj_error)
+
+
+    def to_energy_grid(self, output:torch.Tensor) -> torch.Tensor:
+        return self.net.to_energy_grid(output) # go to self.net for details
+
+    def to_prob_map(self, output:torch.Tensor, threshold:float=None, temperature=1) -> torch.Tensor:
+        if threshold is None:
+            return self.net.to_prob_map(output, temperature=temperature) # go to self.net for details
+        else:
+            return self.net.to_prob_map(output, threshold, temperature)
 
 
     @staticmethod

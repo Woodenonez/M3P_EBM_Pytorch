@@ -159,7 +159,7 @@ class E3Net(nn.Module): #
         return multi_out
 
 
-### XXX
+### XXX TODO: Delete later, when you don't need this for testing!
 class UNetLite_PELU(nn.Module):
     # batch x channel x height x width
     def __init__(self, in_channels, num_classes=1, with_batch_norm=True, bilinear=True, axes=None):
