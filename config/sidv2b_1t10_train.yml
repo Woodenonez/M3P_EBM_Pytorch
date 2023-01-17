@@ -1,0 +1,17 @@
+---
+device: multi
+input_channel: 6
+obsv_len: 5
+pred_len: 10
+---
+batch_size: 20
+checkpoint_dir: Model/SID2b
+early_stopping: 0
+epoch: 20
+learning_rate: 0.001
+weight_regularization: 0.0001
+---
+data_name: SIDv2_1t10_train/2
+data_path: data/SIDv2_1t10_train/2
+label_path: data/SIDv2_1t10_train/2/all_data.csv
+model_path: Model/sidv2b_1t10_sigma5
