@@ -1,7 +1,9 @@
-import os, sys
+import os
+import sys
 import time
 import pickle
 from datetime import datetime
+from typing import List
 
 import torch
 import matplotlib.pyplot as plt
@@ -31,12 +33,12 @@ def check_device():
     torch.cuda.empty_cache()
     print(f'{__PRT_NAME} Pre-check at {datetime.now().strftime("%H:%M:%S, %D")}')
 
-def load_config_fname(dataset_name, pred_range, mode):
+def load_config_fname(dataset_name:str, pred_range:tuple, mode:str):
     return f'{dataset_name.lower()}_{pred_range[0]}t{pred_range[1]}_{mode.lower()}.yml'
 
 def load_param(root_dir, config_file, param_in_list=True, verbose=True):
     if param_in_list:
-        param_list = utils_yaml.from_yaml_all(os.path.join(root_dir, 'config/', config_file), vb=verbose)
+        param_list:List[dict] = utils_yaml.from_yaml_all(os.path.join(root_dir, 'config/', config_file), vb=verbose)
         return {k:v for x in param_list for k,v in x.items()}
     else:
         return utils_yaml.from_yaml(os.path.join(root_dir, 'config/', config_file), vb=verbose)
